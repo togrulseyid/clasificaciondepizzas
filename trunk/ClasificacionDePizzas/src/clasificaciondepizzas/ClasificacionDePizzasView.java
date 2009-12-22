@@ -109,7 +109,7 @@ public class ClasificacionDePizzasView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        openMenuItem = new javax.swing.JMenuItem();
         fileMenuSeparator = new javax.swing.JPopupMenu.Separator();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
@@ -141,11 +141,11 @@ public class ClasificacionDePizzasView extends FrameView {
         fileMenu.setName("fileMenu"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getActionMap(ClasificacionDePizzasView.class, this);
-        jMenuItem1.setAction(actionMap.get("open")); // NOI18N
-        jMenuItem1.setText(resourceMap.getString("openMenuItem.text")); // NOI18N
-        jMenuItem1.setToolTipText(resourceMap.getString("openMenuItem.toolTipText")); // NOI18N
-        jMenuItem1.setName("openMenuItem"); // NOI18N
-        fileMenu.add(jMenuItem1);
+        openMenuItem.setAction(actionMap.get("open")); // NOI18N
+        openMenuItem.setText(resourceMap.getString("openMenuItem.text")); // NOI18N
+        openMenuItem.setToolTipText(resourceMap.getString("openMenuItem.toolTipText")); // NOI18N
+        openMenuItem.setName("openMenuItem"); // NOI18N
+        fileMenu.add(openMenuItem);
 
         fileMenuSeparator.setName("fileMenuSeparator"); // NOI18N
         fileMenu.add(fileMenuSeparator);
@@ -229,9 +229,9 @@ public class ClasificacionDePizzasView extends FrameView {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator fileMenuSeparator;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
