@@ -3,6 +3,7 @@
  */
 package clasificaciondepizzas;
 
+import com.sun.media.jai.widget.DisplayJAI;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -11,11 +12,15 @@ import org.jdesktop.application.Task;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import javax.media.jai.JAI;
+import javax.media.jai.PlanarImage;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -97,6 +102,14 @@ public class ClasificacionDePizzasView extends FrameView {
         ClasificacionDePizzasApp.getApplication().show(aboutBox);
     }
 
+    public void showUmbralBox() {
+        JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
+        umbralBox = new ClasificacionDePizzasUmbralBox(mainFrame);
+        umbralBox.setLocationRelativeTo(mainFrame);
+        
+        ClasificacionDePizzasApp.getApplication().show(umbralBox);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -107,6 +120,7 @@ public class ClasificacionDePizzasView extends FrameView {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
+        baseImageScrollPane = new javax.swing.JScrollPane();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -122,21 +136,36 @@ public class ClasificacionDePizzasView extends FrameView {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasView.class);
+        baseImageScrollPane.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("baseImageScrollPane.viewportBorder.title"))); // NOI18N
+        baseImageScrollPane.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        baseImageScrollPane.setName("baseImageScrollPane"); // NOI18N
+        baseImageScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                baseImageScrollPaneMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(baseImageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 249, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(baseImageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         menuBar.setName("menuBar"); // NOI18N
 
         fileMenu.setMnemonic('A');
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasView.class);
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
@@ -211,23 +240,60 @@ public class ClasificacionDePizzasView extends FrameView {
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void baseImageScrollPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_baseImageScrollPaneMouseClicked
+        open();
+    }//GEN-LAST:event_baseImageScrollPaneMouseClicked
+
     @Action
     public void open() {
-        JFileChooser fileChooser = new JFileChooser(".");
+        JFileChooser fileChooser = new JFileChooser("."); // selector de archivos
+        File file = null; // archivo seleccionado
+
+        // desactiva la opción "Todos los archivos"
         fileChooser.setAcceptAllFileFilterUsed(false);
 
+        // asigna la opción "Todas las imágenes"
         FileFilter filter = new FileNameExtensionFilter("Todas las imágenes", "png", "bmp", "jpeg", "jpg", "tif", "tiff", "gif");
         fileChooser.setFileFilter(filter);
 
         int status = fileChooser.showOpenDialog(null);
 
-        //TODO Completar el tratamiento del archivo una vez seleccionado.
-        /* if (status == JFileChooser.APPROVE_OPTION) {
-            fileChooser.getSelectedFile();
-        } */
-    }
+        // se ha seleccionado un archivo
+        if (status == JFileChooser.APPROVE_OPTION) {
+            file = fileChooser.getSelectedFile();
 
+            // el archivo se abre como una imagen.
+            try {
+                image = JAI.create("fileload", file.getPath());
+            } catch (Exception e) {
+                JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
+
+                JOptionPane.showMessageDialog(mainFrame,
+                        "No se puede abrir la imagen " + file.getName() + ".",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+            // muestra la imagen en un JScrollPane
+            try {
+                // crea una visualización de la imagen
+                DisplayJAI display = new DisplayJAI(image);
+                // asigna la visualización al JScrollPane
+                baseImageScrollPane.setViewportView(display);
+            } catch (RuntimeException e) {
+                JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
+
+                JOptionPane.showMessageDialog(mainFrame,
+                        file.getName() + " no es un archivo de imagen válido.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+            showUmbralBox();
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane baseImageScrollPane;
     private javax.swing.JPopupMenu.Separator fileMenuSeparator;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
@@ -243,4 +309,6 @@ public class ClasificacionDePizzasView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JDialog aboutBox;
+    private JDialog umbralBox;
+    private PlanarImage image;
 }
