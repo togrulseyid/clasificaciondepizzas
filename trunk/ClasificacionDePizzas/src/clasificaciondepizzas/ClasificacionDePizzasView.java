@@ -102,12 +102,13 @@ public class ClasificacionDePizzasView extends FrameView {
         ClasificacionDePizzasApp.getApplication().show(aboutBox);
     }
 
-    public void showUmbralBox() {
+    public void showMedianFilterBox() {
         JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
-        umbralBox = new ClasificacionDePizzasUmbralBox(mainFrame);
-        umbralBox.setLocationRelativeTo(mainFrame);
-        
-        ClasificacionDePizzasApp.getApplication().show(umbralBox);
+        medianFilterBox = new ClasificacionDePizzasMedianFilterBox(mainFrame);
+        medianFilterBox.setLocationRelativeTo(mainFrame);
+        medianFilterBox.setImage(baseImage);
+
+        ClasificacionDePizzasApp.getApplication().show(medianFilterBox);
     }
 
     /** This method is called from within the constructor to
@@ -193,6 +194,7 @@ public class ClasificacionDePizzasView extends FrameView {
 
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
         aboutMenuItem.setText(resourceMap.getString("aboutMenuItem.text")); // NOI18N
+        aboutMenuItem.setToolTipText(resourceMap.getString("aboutMenuItem.toolTipText")); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
         helpMenu.add(aboutMenuItem);
 
@@ -264,7 +266,7 @@ public class ClasificacionDePizzasView extends FrameView {
 
             // el archivo se abre como una imagen.
             try {
-                image = JAI.create("fileload", file.getPath());
+                baseImage = JAI.create("fileload", file.getPath());
             } catch (Exception e) {
                 JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
 
@@ -277,7 +279,7 @@ public class ClasificacionDePizzasView extends FrameView {
             // muestra la imagen en un JScrollPane
             try {
                 // crea una visualización de la imagen
-                DisplayJAI display = new DisplayJAI(image);
+                DisplayJAI display = new DisplayJAI(baseImage);
                 // asigna la visualización al JScrollPane
                 baseImageScrollPane.setViewportView(display);
             } catch (RuntimeException e) {
@@ -289,7 +291,7 @@ public class ClasificacionDePizzasView extends FrameView {
                         JOptionPane.ERROR_MESSAGE);
             }
 
-            showUmbralBox();
+            showMedianFilterBox();
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -309,6 +311,6 @@ public class ClasificacionDePizzasView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JDialog aboutBox;
-    private JDialog umbralBox;
-    private PlanarImage image;
+    private ClasificacionDePizzasMedianFilterBox medianFilterBox;
+    private PlanarImage baseImage;
 }

@@ -16,10 +16,10 @@ import javax.media.jai.PlanarImage;
  *
  * @author Manuel
  */
-public class ClasificacionDePizzasUmbralBox extends javax.swing.JDialog {
+public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
 
     /** Creates new form UmbralBox */
-    public ClasificacionDePizzasUmbralBox(java.awt.Frame parent) {
+    public ClasificacionDePizzasThresholdBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
     }
@@ -33,19 +33,28 @@ public class ClasificacionDePizzasUmbralBox extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        thresholdSlider = new javax.swing.JSlider();
-        cancelButton = new javax.swing.JButton();
-        levelTextField = new javax.swing.JTextField();
-        acceptButton = new javax.swing.JButton();
         thresholdedImageScrollPane = new javax.swing.JScrollPane();
+        acceptButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        thresholdSlider = new javax.swing.JSlider();
+        levelTextField = new javax.swing.JTextField();
         levelLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasUmbralBox.class);
-        setTitle(resourceMap.getString("umbralBox.title")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasThresholdBox.class);
+        setTitle(resourceMap.getString("thresholdBox.title")); // NOI18N
         setModal(true);
-        setName("umbralBox"); // NOI18N
+        setName("thresholdBox"); // NOI18N
         setResizable(false);
+
+        thresholdedImageScrollPane.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("thresholdedImageScrollPane.viewportBorder.title"))); // NOI18N
+        thresholdedImageScrollPane.setName("thresholdedImageScrollPane"); // NOI18N
+
+        acceptButton.setText(resourceMap.getString("acceptButton.text")); // NOI18N
+        acceptButton.setName("acceptButton"); // NOI18N
+
+        cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
+        cancelButton.setName("cancelButton"); // NOI18N
 
         thresholdSlider.setMajorTickSpacing(255);
         thresholdSlider.setMaximum(255);
@@ -60,9 +69,6 @@ public class ClasificacionDePizzasUmbralBox extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
-        cancelButton.setName("cancelButton"); // NOI18N
-
         levelTextField.setText(((Integer)thresholdSlider.getValue()).toString());
         levelTextField.setName("levelTextField"); // NOI18N
         levelTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -70,12 +76,6 @@ public class ClasificacionDePizzasUmbralBox extends javax.swing.JDialog {
                 levelTextFieldActionPerformed(evt);
             }
         });
-
-        acceptButton.setText(resourceMap.getString("acceptButton.text")); // NOI18N
-        acceptButton.setName("acceptButton"); // NOI18N
-
-        thresholdedImageScrollPane.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("thresholdedImageScrollPane.viewportBorder.title"))); // NOI18N
-        thresholdedImageScrollPane.setName("thresholdedImageScrollPane"); // NOI18N
 
         levelLabel.setText(resourceMap.getString("levelLabel.text")); // NOI18N
         levelLabel.setName("levelLabel"); // NOI18N
@@ -137,25 +137,6 @@ public class ClasificacionDePizzasUmbralBox extends javax.swing.JDialog {
     private void levelTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_levelTextFieldActionPerformed
         thresholdSlider.setValue(Integer.parseInt(levelTextField.getText()));
     }//GEN-LAST:event_levelTextFieldActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    /* public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                ClasificacionDePizzasUmbralBox dialog = new ClasificacionDePizzasUmbralBox(new javax.swing.JFrame());
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }*/
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
     private javax.swing.JButton cancelButton;

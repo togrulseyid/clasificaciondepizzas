@@ -36,8 +36,8 @@ public class ClasificacionDePizzasAboutBox extends javax.swing.JDialog {
         javax.swing.JLabel appHomepageLabel = new javax.swing.JLabel();
         javax.swing.JLabel appDescLabel = new javax.swing.JLabel();
         javax.swing.JLabel imageLabel = new javax.swing.JLabel();
-        licenceLabel = new javax.swing.JLabel();
-        appLicenceLabel = new javax.swing.JLabel();
+        licenseLabel = new javax.swing.JLabel();
+        appLicenseLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasAboutBox.class);
@@ -82,12 +82,12 @@ public class ClasificacionDePizzasAboutBox extends javax.swing.JDialog {
         imageLabel.setIcon(resourceMap.getIcon("imageLabel.icon")); // NOI18N
         imageLabel.setName("imageLabel"); // NOI18N
 
-        licenceLabel.setFont(resourceMap.getFont("licenceLabel.font")); // NOI18N
-        licenceLabel.setText(resourceMap.getString("licenceLabel.text")); // NOI18N
-        licenceLabel.setName("licenceLabel"); // NOI18N
+        licenseLabel.setFont(resourceMap.getFont("licenseLabel.font")); // NOI18N
+        licenseLabel.setText(resourceMap.getString("licenseLabel.text")); // NOI18N
+        licenseLabel.setName("licenseLabel"); // NOI18N
 
-        appLicenceLabel.setText(resourceMap.getString("appLicenceLabel.text")); // NOI18N
-        appLicenceLabel.setName("appLicenceLabel"); // NOI18N
+        appLicenseLabel.setText(resourceMap.getString("appLicenseLabel.text")); // NOI18N
+        appLicenseLabel.setName("appLicenseLabel"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,11 +104,11 @@ public class ClasificacionDePizzasAboutBox extends javax.swing.JDialog {
                             .addComponent(versionLabel)
                             .addComponent(vendorLabel)
                             .addComponent(homepageLabel)
-                            .addComponent(licenceLabel))
+                            .addComponent(licenseLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(appLicenceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(appLicenseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
                                 .addComponent(closeButton))
                             .addComponent(appVersionLabel)
@@ -144,8 +144,8 @@ public class ClasificacionDePizzasAboutBox extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(licenceLabel)
-                            .addComponent(appLicenceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(licenseLabel)
+                            .addComponent(appLicenseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())))
         );
 
@@ -153,9 +153,9 @@ public class ClasificacionDePizzasAboutBox extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel appLicenceLabel;
+    private javax.swing.JLabel appLicenseLabel;
     private javax.swing.JButton closeButton;
-    private javax.swing.JLabel licenceLabel;
+    private javax.swing.JLabel licenseLabel;
     // End of variables declaration//GEN-END:variables
     
 }
