@@ -151,7 +151,28 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
 }//GEN-LAST:event_medianSliderStateChanged
 
     private void radiusTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiusTextFieldActionPerformed
-        medianSlider.setValue(Integer.parseInt(radiusTextField.getText()));
+        PlanarImage previewImage; //previsualización en miniatura con el filtro aplicado
+        int value = Integer.parseInt(radiusTextField.getText()); // valor del campo de texto
+
+        // el control de desplazamiento se actualiza junto con el campo de texto
+        medianSlider.setValue(value);
+
+        try {
+            // previsualización en miniatura del filtro de la mediana
+            previewImage = Operations.medianFilter(thumbnail, medianSlider.getValue());
+            DisplayJAI display = new DisplayJAI(previewImage);
+            medianImageScrollPane.setViewportView(display);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible aplicar el filtro de la mediana.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible previsualizar la imagen.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
 }//GEN-LAST:event_radiusTextFieldActionPerformed
 
     private void medianSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_medianSliderMouseReleased
@@ -174,7 +195,6 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_medianSliderMouseReleased
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
     private javax.swing.JButton cancelButton;
