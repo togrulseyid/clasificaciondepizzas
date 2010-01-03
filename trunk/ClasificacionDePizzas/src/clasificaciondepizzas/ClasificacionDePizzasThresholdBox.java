@@ -10,7 +10,10 @@
  */
 package clasificaciondepizzas;
 
+import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
+import javax.swing.JOptionPane;
+import tools.Operations;
 
 /**
  *
@@ -86,21 +89,22 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(thresholdedImageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(thresholdSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(206, 206, 206)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(levelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(levelLabel)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(thresholdedImageScrollPane)
-                            .addComponent(thresholdSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(cancelButton)
-                            .addComponent(acceptButton))))
-                .addContainerGap())
+                            .addComponent(acceptButton))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(levelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(levelLabel))
+                        .addContainerGap())))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {levelLabel, levelTextField});
@@ -131,11 +135,51 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void thresholdSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_thresholdSliderStateChanged
+        PlanarImage previewImage;
+
         levelTextField.setText(((Integer) thresholdSlider.getValue()).toString());
+
+        try {
+            // previsualización en miniatura del filtro del umbral
+            previewImage = Operations.threshold(thumbnail, thresholdSlider.getValue());
+            DisplayJAI display = new DisplayJAI(previewImage);
+            thresholdedImageScrollPane.setViewportView(display);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible aplicar el umbral.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible previsualizar la imagen.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_thresholdSliderStateChanged
 
     private void levelTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_levelTextFieldActionPerformed
-        thresholdSlider.setValue(Integer.parseInt(levelTextField.getText()));
+        PlanarImage previewImage; //previsualización en miniatura con el filtro aplicado
+        int value = Integer.parseInt(levelTextField.getText()); // valor del campo de texto
+
+        // el control de desplazamiento se actualiza junto con el campo de texto
+        thresholdSlider.setValue(value);
+
+        try {
+            // previsualización en miniatura del filtro del umbral
+            previewImage = Operations.threshold(thumbnail, thresholdSlider.getValue());
+            DisplayJAI display = new DisplayJAI(previewImage);
+            thresholdedImageScrollPane.setViewportView(display);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible aplicar el umbral.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible previsualizar la imagen.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_levelTextFieldActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
@@ -145,5 +189,43 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
     private javax.swing.JSlider thresholdSlider;
     private javax.swing.JScrollPane thresholdedImageScrollPane;
     // End of variables declaration//GEN-END:variables
-    private PlanarImage original;
+    protected PlanarImage image;
+    protected PlanarImage thumbnail;
+
+    void setImage(PlanarImage image) {
+        this.image = image;
+        thumbnail = this.image;
+        PlanarImage previewImage; //previsualización en miniatura con el filtro aplicado
+
+        // si la imagen supera el tamaño del panel con desplazamiento se escala a un tamaño menor
+        if (image.getWidth() > thresholdedImageScrollPane.getWidth() || image.getHeight() > thresholdedImageScrollPane.getHeight()) {
+            // si la imagen supera la anchura del panel con desplazamiento se escala a una anchura menor
+            if (image.getWidth() > image.getHeight()) {
+                float ratio = (float) thresholdedImageScrollPane.getWidth() / (float) image.getWidth();
+                thumbnail = Operations.scale(image, ratio, ratio);
+            } // si la imagen supera la altura del panel con desplazamiento se escala a una altura menor
+            else {
+                float ratio = (float) thresholdedImageScrollPane.getHeight() / (float) image.getHeight();
+                thumbnail = Operations.scale(image, ratio, ratio);
+            }
+        }
+
+
+        try {
+            // previsualización en miniatura del filtro del umbral
+            previewImage = Operations.threshold(thumbnail, thresholdSlider.getValue());
+            DisplayJAI display = new DisplayJAI(previewImage);
+            thresholdedImageScrollPane.setViewportView(display);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible aplicar el umbral.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No es posible previsualizar la imagen.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
