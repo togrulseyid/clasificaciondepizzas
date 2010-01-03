@@ -59,7 +59,7 @@ public class Operations {
         parameters.addSource(image);
         parameters.add(rgbToGray);
 
-        image = JAI.create("bandcombine", parameters);
+        image = JAI.create("BandCombine", parameters);
 
         //se binariza la imagen en escala de grises en función del valor threshold
         //parámetros de la operación
@@ -67,6 +67,17 @@ public class Operations {
         parameters.addSource(image);
         parameters.add(threshold);
 
-        return JAI.create("binarize", parameters);
+        return JAI.create("Binarize", parameters);
+    }
+
+    /* Aplica un detector de bordes sobre la imagen image devolviendo una
+     * imagen con el detector aplicado.
+     */
+    public static PlanarImage edge(PlanarImage image) {
+        //parámetros para la operación
+        ParameterBlock parameters = new ParameterBlock();
+        parameters.addSource(image);
+
+        return JAI.create("GradientMagnitude", parameters);
     }
 }

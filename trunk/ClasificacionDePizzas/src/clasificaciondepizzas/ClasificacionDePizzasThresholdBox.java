@@ -12,6 +12,7 @@ package clasificaciondepizzas;
 
 import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import tools.Operations;
 
@@ -25,6 +26,16 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
     public ClasificacionDePizzasThresholdBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
+    }
+
+    public void showEdgeDetectorBox() {
+        JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
+        edgeDetectorBox = new ClasificacionDePizzasEdgeDetectorBox(mainFrame);
+        edgeDetectorBox.setLocationRelativeTo(this);
+        image = Operations.threshold(image, thresholdSlider.getValue());
+        edgeDetectorBox.setImage(image);
+
+        ClasificacionDePizzasApp.getApplication().show(edgeDetectorBox);
     }
 
     /** This method is called from within the constructor to
@@ -55,9 +66,19 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
 
         acceptButton.setText(resourceMap.getString("acceptButton.text")); // NOI18N
         acceptButton.setName("acceptButton"); // NOI18N
+        acceptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acceptButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         thresholdSlider.setMajorTickSpacing(255);
         thresholdSlider.setMaximum(255);
@@ -181,6 +202,17 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_levelTextFieldActionPerformed
+
+    private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+        setVisible(false);
+        showEdgeDetectorBox();
+        dispose();
+    }//GEN-LAST:event_acceptButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
     private javax.swing.JButton cancelButton;
@@ -189,6 +221,7 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
     private javax.swing.JSlider thresholdSlider;
     private javax.swing.JScrollPane thresholdedImageScrollPane;
     // End of variables declaration//GEN-END:variables
+    private ClasificacionDePizzasEdgeDetectorBox edgeDetectorBox;
     protected PlanarImage image;
     protected PlanarImage thumbnail;
 
@@ -209,7 +242,6 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
                 thumbnail = Operations.scale(image, ratio, ratio);
             }
         }
-
 
         try {
             // previsualización en miniatura del filtro del umbral
