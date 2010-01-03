@@ -12,6 +12,7 @@ package clasificaciondepizzas;
 
 import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import tools.Operations;
 
@@ -25,6 +26,16 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
     public ClasificacionDePizzasMedianFilterBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
+    }
+
+    public void showThresholdBox() {
+        JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
+        thresholdBox = new ClasificacionDePizzasThresholdBox(mainFrame);
+        thresholdBox.setLocationRelativeTo(this);
+        image = Operations.medianFilter(image, medianSlider.getValue());
+        thresholdBox.setImage(image);
+
+        ClasificacionDePizzasApp.getApplication().show(thresholdBox);
     }
 
     /** This method is called from within the constructor to
@@ -55,9 +66,19 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
 
         acceptButton.setText(resourceMap.getString("acceptButton.text")); // NOI18N
         acceptButton.setName("acceptButton"); // NOI18N
+        acceptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acceptButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         medianSlider.setMajorTickSpacing(100);
         medianSlider.setMinimum(1);
@@ -195,6 +216,17 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_medianSliderMouseReleased
+
+    private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+        setVisible(false);
+        showThresholdBox();
+        dispose();
+    }//GEN-LAST:event_acceptButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
     private javax.swing.JButton cancelButton;
@@ -204,6 +236,7 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
     private javax.swing.JLabel pixelsLabel;
     private javax.swing.JTextField radiusTextField;
     // End of variables declaration//GEN-END:variables
+    private ClasificacionDePizzasThresholdBox thresholdBox;
     protected PlanarImage image;
     protected PlanarImage thumbnail;
 
