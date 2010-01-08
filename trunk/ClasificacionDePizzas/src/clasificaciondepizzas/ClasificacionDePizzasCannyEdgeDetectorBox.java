@@ -4,25 +4,27 @@
  */
 
 /*
- * ClasificacionDePizzasEdgeDetectorBox.java
+ * ClasificacionDePizzasCannyEdgeDetectorBox.java
  *
  * Created on 03-ene-2010, 3:06:38
  */
 package clasificaciondepizzas;
 
+import clasificaciondepizzas.models.BaseModel;
 import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
 import javax.swing.JOptionPane;
-import tools.Operations;
+import clasificaciondepizzas.operations.ImageOperations;
+import clasificaciondepizzas.operations.ValueBaseOperations;
 
 /**
  *
  * @author Manuel
  */
-public class ClasificacionDePizzasEdgeDetectorBox extends javax.swing.JDialog {
+public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDialog {
 
-    /** Creates new form ClasificacionDePizzasEdgeDetectorBox */
-    public ClasificacionDePizzasEdgeDetectorBox(java.awt.Frame parent) {
+    /** Creates new form ClasificacionDePizzasCannyEdgeDetectorBox */
+    public ClasificacionDePizzasCannyEdgeDetectorBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
     }
@@ -40,7 +42,7 @@ public class ClasificacionDePizzasEdgeDetectorBox extends javax.swing.JDialog {
         acceptButton = new javax.swing.JToggleButton();
         cancelButton = new javax.swing.JToggleButton();
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasEdgeDetectorBox.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasCannyEdgeDetectorBox.class);
         setTitle(resourceMap.getString("edgeDetectorBox.title")); // NOI18N
         setModal(true);
         setName("edgeDetectorBox"); // NOI18N
@@ -48,13 +50,22 @@ public class ClasificacionDePizzasEdgeDetectorBox extends javax.swing.JDialog {
 
         edgeImageScrollPane.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("edgeImageScrollPane.viewportBorder.title"))); // NOI18N
         edgeImageScrollPane.setName("edgeImageScrollPane"); // NOI18N
-        edgeImageScrollPane.setPreferredSize(new java.awt.Dimension(18, 32));
 
         acceptButton.setText(resourceMap.getString("acceptButton.text")); // NOI18N
         acceptButton.setName("acceptButton"); // NOI18N
+        acceptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acceptButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,6 +98,24 @@ public class ClasificacionDePizzasEdgeDetectorBox extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+        image = ImageOperations.cannyEdge(image);
+        ValueBaseOperations vbo = new ValueBaseOperations(image);
+
+        bm.setAreaRatio(vbo.areaRatio());
+        bm.setAspectRatio(vbo.aspectRatio());
+        bm.setEccentricity(vbo.eccentricity());
+        bm.setRoundness(vbo.roudness());
+        
+        setVisible(false);
+        dispose();
+    }//GEN-LAST:event_acceptButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton acceptButton;
     private javax.swing.JToggleButton cancelButton;
@@ -94,6 +123,7 @@ public class ClasificacionDePizzasEdgeDetectorBox extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
     protected PlanarImage image;
     protected PlanarImage thumbnail;
+    private BaseModel bm;
 
     void setImage(PlanarImage image) {
         this.image = image;
@@ -105,17 +135,17 @@ public class ClasificacionDePizzasEdgeDetectorBox extends javax.swing.JDialog {
             // si la imagen supera la anchura del panel con desplazamiento se escala a una anchura menor
             if (image.getWidth() > image.getHeight()) {
                 float ratio = (float) edgeImageScrollPane.getWidth() / (float) image.getWidth();
-                thumbnail = Operations.scale(image, ratio, ratio);
+                thumbnail = ImageOperations.scale(image, ratio, ratio);
             } // si la imagen supera la altura del panel con desplazamiento se escala a una altura menor
             else {
                 float ratio = (float) edgeImageScrollPane.getHeight() / (float) image.getHeight();
-                thumbnail = Operations.scale(image, ratio, ratio);
+                thumbnail = ImageOperations.scale(image, ratio, ratio);
             }
         }
 
         try {
             // previsualización en miniatura del detector de bordes
-            previewImage = Operations.edge(thumbnail);
+            previewImage = ImageOperations.cannyEdge(thumbnail);
             DisplayJAI display = new DisplayJAI(previewImage);
             edgeImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
@@ -129,5 +159,9 @@ public class ClasificacionDePizzasEdgeDetectorBox extends javax.swing.JDialog {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    void setBaseModel(BaseModel bm) {
+        this.bm = bm;
     }
 }
