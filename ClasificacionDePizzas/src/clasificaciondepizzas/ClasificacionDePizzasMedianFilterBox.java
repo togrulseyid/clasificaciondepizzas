@@ -10,11 +10,12 @@
  */
 package clasificaciondepizzas;
 
+import clasificaciondepizzas.models.BaseModel;
 import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import tools.Operations;
+import clasificaciondepizzas.operations.ImageOperations;
 
 /**
  *
@@ -32,8 +33,9 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
         JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
         thresholdBox = new ClasificacionDePizzasThresholdBox(mainFrame);
         thresholdBox.setLocationRelativeTo(this);
-        image = Operations.medianFilter(image, medianSlider.getValue());
+        image = ImageOperations.medianFilter(image, medianSlider.getValue());
         thresholdBox.setImage(image);
+        thresholdBox.setBaseModel(bm);
 
         ClasificacionDePizzasApp.getApplication().show(thresholdBox);
     }
@@ -180,7 +182,7 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
 
         try {
             // previsualización en miniatura del filtro de la mediana
-            previewImage = Operations.medianFilter(thumbnail, medianSlider.getValue());
+            previewImage = ImageOperations.medianFilter(thumbnail, medianSlider.getValue());
             DisplayJAI display = new DisplayJAI(previewImage);
             medianImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
@@ -201,7 +203,7 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
 
         try {
             // previsualización en miniatura del filtro de la mediana
-            previewImage = Operations.medianFilter(thumbnail, medianSlider.getValue());
+            previewImage = ImageOperations.medianFilter(thumbnail, medianSlider.getValue());
             DisplayJAI display = new DisplayJAI(previewImage);
             medianImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
@@ -226,7 +228,6 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
     private javax.swing.JButton cancelButton;
@@ -239,6 +240,7 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
     private ClasificacionDePizzasThresholdBox thresholdBox;
     protected PlanarImage image;
     protected PlanarImage thumbnail;
+    private BaseModel bm;
 
     /**
      * Devuelve el valor de image
@@ -264,18 +266,18 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
             // si la imagen supera la anchura del panel con desplazamiento se escala a una anchura menor
             if (image.getWidth() > image.getHeight()) {
                 float ratio = (float) medianImageScrollPane.getWidth() / (float) image.getWidth();
-                thumbnail = Operations.scale(image, ratio, ratio);
+                thumbnail = ImageOperations.scale(image, ratio, ratio);
             } // si la imagen supera la altura del panel con desplazamiento se escala a una altura menor
             else {
                 float ratio = (float) medianImageScrollPane.getHeight() / (float) image.getHeight();
-                thumbnail = Operations.scale(image, ratio, ratio);
+                thumbnail = ImageOperations.scale(image, ratio, ratio);
             }
         }
 
 
         try {
             // previsualización en miniatura del filtro de la mediana
-            previewImage = Operations.medianFilter(thumbnail, medianSlider.getValue());
+            previewImage = ImageOperations.medianFilter(thumbnail, medianSlider.getValue());
             DisplayJAI display = new DisplayJAI(previewImage);
             medianImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
@@ -289,5 +291,9 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    void setBaseModel(BaseModel bm) {
+        this.bm = bm;
     }
 }

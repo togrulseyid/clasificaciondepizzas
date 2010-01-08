@@ -3,12 +3,13 @@
  */
 package clasificaciondepizzas;
 
+import clasificaciondepizzas.models.BaseModel;
+import clasificaciondepizzas.models.SauceAndToppingModel;
 import com.sun.media.jai.widget.DisplayJAI;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
-import org.jdesktop.application.Task;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -108,7 +109,20 @@ public class ClasificacionDePizzasView extends FrameView {
         medianFilterBox.setLocationRelativeTo(mainFrame);
         medianFilterBox.setImage(baseImage);
 
+        bm = new BaseModel();
+        medianFilterBox.setBaseModel(bm);
+
         ClasificacionDePizzasApp.getApplication().show(medianFilterBox);
+        appAreaRatioLabel.setText(String.valueOf(bm.getAreaRatio()));
+        appAspectRatioLabel.setText(String.valueOf(bm.getAspectRatio()));
+        appEccentricityLabel.setText(String.valueOf(bm.getEccentricity()));
+        appRoundnessLabel.setText(String.valueOf(bm.getRoundness()));
+        
+        if(!appAreaRatioLabel.getText().equals("0.0") && !appAspectRatioLabel.getText().equals("0.0")
+                && !appEccentricityLabel.getText().equals("0.0") && !appRoundnessLabel.getText().equals("0.0")) {
+        classifyButton.setEnabled(true);            
+        }
+
     }
 
     /** This method is called from within the constructor to
@@ -122,6 +136,15 @@ public class ClasificacionDePizzasView extends FrameView {
 
         mainPanel = new javax.swing.JPanel();
         baseImageScrollPane = new javax.swing.JScrollPane();
+        areaRatioLabel = new javax.swing.JLabel();
+        aspectRatioLabel = new javax.swing.JLabel();
+        eccentricityLabel = new javax.swing.JLabel();
+        roundnessLabel = new javax.swing.JLabel();
+        appAreaRatioLabel = new javax.swing.JLabel();
+        appAspectRatioLabel = new javax.swing.JLabel();
+        appEccentricityLabel = new javax.swing.JLabel();
+        appRoundnessLabel = new javax.swing.JLabel();
+        classifyButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -147,22 +170,88 @@ public class ClasificacionDePizzasView extends FrameView {
             }
         });
 
+        areaRatioLabel.setText(resourceMap.getString("areaRatioLabel.text")); // NOI18N
+        areaRatioLabel.setName("areaRatioLabel"); // NOI18N
+
+        aspectRatioLabel.setText(resourceMap.getString("aspectRatioLabel.text")); // NOI18N
+        aspectRatioLabel.setName("aspectRatioLabel"); // NOI18N
+
+        eccentricityLabel.setText(resourceMap.getString("eccentricityLabel.text")); // NOI18N
+        eccentricityLabel.setName("eccentricityLabel"); // NOI18N
+
+        roundnessLabel.setText(resourceMap.getString("roundnessLabel.text")); // NOI18N
+        roundnessLabel.setName("roundnessLabel"); // NOI18N
+
+        appAreaRatioLabel.setText(resourceMap.getString("appAreaRatioLabel.text")); // NOI18N
+        appAreaRatioLabel.setName("appAreaRatioLabel"); // NOI18N
+
+        appAspectRatioLabel.setText(resourceMap.getString("appAspectRatioLabel.text")); // NOI18N
+        appAspectRatioLabel.setName("appAspectRatioLabel"); // NOI18N
+
+        appEccentricityLabel.setText(resourceMap.getString("appEccentricityLabel.text")); // NOI18N
+        appEccentricityLabel.setName("appEccentricityLabel"); // NOI18N
+
+        appRoundnessLabel.setText(resourceMap.getString("appRoundnessLabel.text")); // NOI18N
+        appRoundnessLabel.setName("appRoundnessLabel"); // NOI18N
+
+        classifyButton.setText(resourceMap.getString("classifyButton.text")); // NOI18N
+        classifyButton.setEnabled(false);
+        classifyButton.setName("classifyButton"); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(baseImageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(baseImageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                    .addComponent(classifyButton)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(aspectRatioLabel)
+                            .addComponent(eccentricityLabel)
+                            .addComponent(roundnessLabel)
+                            .addComponent(areaRatioLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(appRoundnessLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(appAspectRatioLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(appEccentricityLabel))
+                            .addComponent(appAreaRatioLabel))))
                 .addContainerGap())
         );
+
+        mainPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {areaRatioLabel, aspectRatioLabel, eccentricityLabel, roundnessLabel});
+
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(baseImageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                .addComponent(baseImageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(appAreaRatioLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(areaRatioLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(aspectRatioLabel)
+                    .addComponent(appAspectRatioLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 14, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(eccentricityLabel)
+                    .addComponent(appEccentricityLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(roundnessLabel)
+                    .addComponent(appRoundnessLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(classifyButton)
                 .addContainerGap())
         );
+
+        mainPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {appAspectRatioLabel, appEccentricityLabel});
 
         menuBar.setName("menuBar"); // NOI18N
 
@@ -215,11 +304,11 @@ public class ClasificacionDePizzasView extends FrameView {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -295,12 +384,21 @@ public class ClasificacionDePizzasView extends FrameView {
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel appAreaRatioLabel;
+    private javax.swing.JLabel appAspectRatioLabel;
+    private javax.swing.JLabel appEccentricityLabel;
+    private javax.swing.JLabel appRoundnessLabel;
+    private javax.swing.JLabel areaRatioLabel;
+    private javax.swing.JLabel aspectRatioLabel;
     private javax.swing.JScrollPane baseImageScrollPane;
+    private javax.swing.JButton classifyButton;
+    private javax.swing.JLabel eccentricityLabel;
     private javax.swing.JPopupMenu.Separator fileMenuSeparator;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JLabel roundnessLabel;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
@@ -313,4 +411,7 @@ public class ClasificacionDePizzasView extends FrameView {
     private JDialog aboutBox;
     private ClasificacionDePizzasMedianFilterBox medianFilterBox;
     private PlanarImage baseImage;
+    private BaseModel bm;
+    private SauceAndToppingModel sm;
+    private SauceAndToppingModel tm;
 }

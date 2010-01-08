@@ -10,11 +10,12 @@
  */
 package clasificaciondepizzas;
 
+import clasificaciondepizzas.models.BaseModel;
 import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import tools.Operations;
+import clasificaciondepizzas.operations.ImageOperations;
 
 /**
  *
@@ -30,10 +31,11 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
 
     public void showEdgeDetectorBox() {
         JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
-        edgeDetectorBox = new ClasificacionDePizzasEdgeDetectorBox(mainFrame);
+        edgeDetectorBox = new ClasificacionDePizzasCannyEdgeDetectorBox(mainFrame);
         edgeDetectorBox.setLocationRelativeTo(this);
-        image = Operations.threshold(image, thresholdSlider.getValue());
+        image = ImageOperations.threshold(image, thresholdSlider.getValue());
         edgeDetectorBox.setImage(image);
+        edgeDetectorBox.setBaseModel(bm);
 
         ClasificacionDePizzasApp.getApplication().show(edgeDetectorBox);
     }
@@ -162,7 +164,7 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
 
         try {
             // previsualización en miniatura del filtro del umbral
-            previewImage = Operations.threshold(thumbnail, thresholdSlider.getValue());
+            previewImage = ImageOperations.threshold(thumbnail, thresholdSlider.getValue());
             DisplayJAI display = new DisplayJAI(previewImage);
             thresholdedImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
@@ -187,7 +189,7 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
 
         try {
             // previsualización en miniatura del filtro del umbral
-            previewImage = Operations.threshold(thumbnail, thresholdSlider.getValue());
+            previewImage = ImageOperations.threshold(thumbnail, thresholdSlider.getValue());
             DisplayJAI display = new DisplayJAI(previewImage);
             thresholdedImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
@@ -212,7 +214,6 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
     private javax.swing.JButton cancelButton;
@@ -221,9 +222,10 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
     private javax.swing.JSlider thresholdSlider;
     private javax.swing.JScrollPane thresholdedImageScrollPane;
     // End of variables declaration//GEN-END:variables
-    private ClasificacionDePizzasEdgeDetectorBox edgeDetectorBox;
+    private ClasificacionDePizzasCannyEdgeDetectorBox edgeDetectorBox;
     protected PlanarImage image;
     protected PlanarImage thumbnail;
+    private BaseModel bm;
 
     void setImage(PlanarImage image) {
         this.image = image;
@@ -235,17 +237,17 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
             // si la imagen supera la anchura del panel con desplazamiento se escala a una anchura menor
             if (image.getWidth() > image.getHeight()) {
                 float ratio = (float) thresholdedImageScrollPane.getWidth() / (float) image.getWidth();
-                thumbnail = Operations.scale(image, ratio, ratio);
+                thumbnail = ImageOperations.scale(image, ratio, ratio);
             } // si la imagen supera la altura del panel con desplazamiento se escala a una altura menor
             else {
                 float ratio = (float) thresholdedImageScrollPane.getHeight() / (float) image.getHeight();
-                thumbnail = Operations.scale(image, ratio, ratio);
+                thumbnail = ImageOperations.scale(image, ratio, ratio);
             }
         }
 
         try {
             // previsualización en miniatura del filtro del umbral
-            previewImage = Operations.threshold(thumbnail, thresholdSlider.getValue());
+            previewImage = ImageOperations.threshold(thumbnail, thresholdSlider.getValue());
             DisplayJAI display = new DisplayJAI(previewImage);
             thresholdedImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
@@ -259,5 +261,9 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    void setBaseModel(BaseModel bm) {
+        this.bm = bm;
     }
 }
