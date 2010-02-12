@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.renderable.ParameterBlock;
 import javax.media.jai.BorderExtender;
 import javax.media.jai.JAI;
+import javax.media.jai.KernelJAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.operator.MedianFilterDescriptor;
 
@@ -163,5 +164,99 @@ public class ImageOperations {
         }
 
         return JAI.create("BandCombine", parameters);
+    }
+
+    /*
+     * Aplica una dilatación morfológica sobre la imagen image devolviendo una
+     * imagen con la dilatación aplicada.
+     */
+    public static PlanarImage dilate(PlanarImage original, int size) {
+        if (size < 3) {
+            throw new IllegalArgumentException("El tamaño mínimo del elemento dilatador es 3.");
+        }
+
+        float kernelMatrix[] = new float[size * size];
+
+        //elemento dilatador cuyas primera y última fila y columna valen 0
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (i == 0 || i == size - 1 || j == 0 || j == size - 1) {
+                    kernelMatrix[i * size + j] = 0;
+                } else {
+                    kernelMatrix[i * size + j] = 1;
+                }
+            }
+        }
+
+        KernelJAI kernel = new KernelJAI(size, size, kernelMatrix);
+
+        //parámetros para la operación
+        ParameterBlock parameters = new ParameterBlock();
+        parameters.addSource(original);
+        parameters.add(kernel);
+
+        //TODO
+        RenderingHints hint = new RenderingHints(JAI.KEY_BORDER_EXTENDER,
+                BorderExtender.createInstance(BorderExtender.BORDER_COPY));
+
+        return JAI.create("dilate", parameters, hint);
+    }
+
+    /* Aplica un suavizado sobre la imagen image devolviendo una imagen con el
+     * suavizado aplicado.
+     */
+    public static PlanarImage smooth(PlanarImage image, int size) {
+        if (size < 3) {
+            throw new IllegalArgumentException("El tamaño mínimo del elemento suavizador es 3.");
+        }
+
+        float[] kernelMatrix = new float[size * size];
+        for (int i = 0; i < kernelMatrix.length - 1; i++) {
+            kernelMatrix[i] = 1f / (size * size);
+        }
+
+        KernelJAI kernel = new KernelJAI(size, size, kernelMatrix);
+        ParameterBlock params = new ParameterBlock();
+        params.addSource(image);
+        params.add(kernel);
+
+        // TODO
+        RenderingHints hint = new RenderingHints(JAI.KEY_BORDER_EXTENDER,
+                BorderExtender.createInstance(BorderExtender.BORDER_COPY));
+
+        return JAI.create("convolve", params, hint);
+    }
+
+    /*
+     * Aplica una binarización sobre la imagen image devolviendo una imagen
+     * binarizada para un valor value.
+     */
+    public static PlanarImage binarize(PlanarImage image, double value) {
+        //parámetros para la operación
+        ParameterBlock parameters = new ParameterBlock();
+        parameters.addSource(toGray(image));
+        parameters.add(value);
+
+        return JAI.create("Binarize", parameters);
+    }
+
+    /*
+     * Aplica una operación matemática AND sobre las imágenes image1 e image2
+     * devolviendo una imagen con la operación aplicada.
+     */
+    public static PlanarImage and(PlanarImage image1, PlanarImage image2) {
+        //parámetros para la operación
+        ParameterBlock parameters = new ParameterBlock();
+        parameters.addSource(image1);
+        parameters.addSource(image2);
+
+        return JAI.create("And", parameters);
+    }
+
+    public static PlanarImage invert(PlanarImage original) {
+        ParameterBlock parameters = new ParameterBlock();
+        parameters.addSource(original);
+
+        return JAI.create("Invert", parameters);
     }
 }

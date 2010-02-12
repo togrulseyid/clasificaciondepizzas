@@ -11,6 +11,8 @@
 package clasificaciondepizzas;
 
 import clasificaciondepizzas.models.BaseModel;
+import clasificaciondepizzas.models.SauceAndToppingModel;
+import clasificaciondepizzas.types.images.ImageType;
 import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
 import javax.swing.JFrame;
@@ -29,15 +31,30 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
         initComponents();
     }
 
-    public void showEdgeDetectorBox() {
+    public void showCannyEdgeDetectorBox() {
         JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
-        edgeDetectorBox = new ClasificacionDePizzasCannyEdgeDetectorBox(mainFrame);
-        edgeDetectorBox.setLocationRelativeTo(this);
+        cannyEdgeDetectorBox = new ClasificacionDePizzasCannyEdgeDetectorBox(mainFrame);
+        cannyEdgeDetectorBox.setLocationRelativeTo(this);
         image = ImageOperations.threshold(image, thresholdSlider.getValue());
-        edgeDetectorBox.setImage(image);
-        edgeDetectorBox.setBaseModel(bm);
+        cannyEdgeDetectorBox.setImage(image);
+        cannyEdgeDetectorBox.setBaseModel(bm);
 
-        ClasificacionDePizzasApp.getApplication().show(edgeDetectorBox);
+        ClasificacionDePizzasApp.getApplication().show(cannyEdgeDetectorBox);
+    }
+
+    public void showSobelEdgeDetectorBox() {
+        JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
+        morphologicalDilationBox = new ClasificacionDePizzasMorphologicalDilationBox(mainFrame);
+        morphologicalDilationBox.setLocationRelativeTo(this);
+        image = ImageOperations.threshold(image, thresholdSlider.getValue());
+        switch(imageType) {
+            case SAUCE:
+                image = ImageOperations.invert(image);
+        }
+        morphologicalDilationBox.setImage(image);
+        morphologicalDilationBox.setSauceAndToppingModel(stm);
+
+        ClasificacionDePizzasApp.getApplication().show(morphologicalDilationBox);
     }
 
     /** This method is called from within the constructor to
@@ -207,7 +224,20 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
         setVisible(false);
-        showEdgeDetectorBox();
+
+        switch (imageType) {
+            case BASE:
+                showCannyEdgeDetectorBox();
+                break;
+            case SAUCE:
+                // TODO Cambiar por showSobelEdgeDetectorBox();
+                showSobelEdgeDetectorBox();
+                break;
+            case TOPPING:
+                showSobelEdgeDetectorBox();
+                break;
+        }
+        
         dispose();
     }//GEN-LAST:event_acceptButtonActionPerformed
 
@@ -222,10 +252,14 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
     private javax.swing.JSlider thresholdSlider;
     private javax.swing.JScrollPane thresholdedImageScrollPane;
     // End of variables declaration//GEN-END:variables
-    private ClasificacionDePizzasCannyEdgeDetectorBox edgeDetectorBox;
+    private ClasificacionDePizzasCannyEdgeDetectorBox cannyEdgeDetectorBox;
+    private ClasificacionDePizzasSobelEdgeDetectorBox sobelEdgeDetectorBox;
+    private ClasificacionDePizzasMorphologicalDilationBox morphologicalDilationBox;
     protected PlanarImage image;
     protected PlanarImage thumbnail;
     private BaseModel bm;
+    private SauceAndToppingModel stm;
+    private ImageType imageType;
 
     void setImage(PlanarImage image) {
         this.image = image;
@@ -265,5 +299,13 @@ public class ClasificacionDePizzasThresholdBox extends javax.swing.JDialog {
 
     void setBaseModel(BaseModel bm) {
         this.bm = bm;
+    }
+
+    void setSauceAndToppingModel(SauceAndToppingModel stm) {
+        this.stm = stm;
+    }
+
+    void setImageType(ImageType imageType) {
+        this.imageType = imageType;
     }
 }

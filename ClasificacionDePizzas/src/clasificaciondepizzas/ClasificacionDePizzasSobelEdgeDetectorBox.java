@@ -4,29 +4,40 @@
  */
 
 /*
- * ClasificacionDePizzasCannyEdgeDetectorBox.java
+ * ClasificacionDePizzasSobelEdgeDetectorBox.java
  *
- * Created on 03-ene-2010, 3:06:38
+ * Created on 09-ene-2010, 18:03:51
  */
 package clasificaciondepizzas;
 
-import clasificaciondepizzas.models.BaseModel;
+import clasificaciondepizzas.models.SauceAndToppingModel;
+import clasificaciondepizzas.operations.ImageOperations;
 import com.sun.media.jai.widget.DisplayJAI;
 import javax.media.jai.PlanarImage;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import clasificaciondepizzas.operations.ImageOperations;
-import clasificaciondepizzas.operations.ValueBaseOperations;
 
 /**
  *
  * @author Manuel
  */
-public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDialog {
+public class ClasificacionDePizzasSobelEdgeDetectorBox extends javax.swing.JDialog {
 
-    /** Creates new form ClasificacionDePizzasCannyEdgeDetectorBox */
-    public ClasificacionDePizzasCannyEdgeDetectorBox(java.awt.Frame parent) {
+    /** Creates new form ClasificacionDePizzasSobelEdgeDetectorBox */
+    public ClasificacionDePizzasSobelEdgeDetectorBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
+    }
+
+    public void showMorphologicalDilationBox() {
+        JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
+        morphologicalDilationBox = new ClasificacionDePizzasMorphologicalDilationBox(mainFrame);
+        morphologicalDilationBox.setLocationRelativeTo(this);
+        image = ImageOperations.sobelEdge(image);
+        morphologicalDilationBox.setImage(image);
+        morphologicalDilationBox.setSauceAndToppingModel(stm);
+
+        ClasificacionDePizzasApp.getApplication().show(morphologicalDilationBox);
     }
 
     /** This method is called from within the constructor to
@@ -38,18 +49,15 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        edgeImageScrollPane = new javax.swing.JScrollPane();
         acceptButton = new javax.swing.JToggleButton();
         cancelButton = new javax.swing.JToggleButton();
+        edgeImageScrollPane = new javax.swing.JScrollPane();
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasCannyEdgeDetectorBox.class);
-        setTitle(resourceMap.getString("cannyEdgeDetectorBox.title")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(clasificaciondepizzas.ClasificacionDePizzasApp.class).getContext().getResourceMap(ClasificacionDePizzasSobelEdgeDetectorBox.class);
+        setTitle(resourceMap.getString("sobelEdgeDetectorBox.title")); // NOI18N
         setModal(true);
-        setName("cannyEdgeDetectorBox"); // NOI18N
+        setName("sobelEdgeDetectorBox"); // NOI18N
         setResizable(false);
-
-        edgeImageScrollPane.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("edgeImageScrollPane.viewportBorder.title"))); // NOI18N
-        edgeImageScrollPane.setName("edgeImageScrollPane"); // NOI18N
 
         acceptButton.setText(resourceMap.getString("acceptButton.text")); // NOI18N
         acceptButton.setName("acceptButton"); // NOI18N
@@ -67,6 +75,9 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
             }
         });
 
+        edgeImageScrollPane.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("edgeImageScrollPane.viewportBorder.title"))); // NOI18N
+        edgeImageScrollPane.setName("edgeImageScrollPane"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -74,11 +85,11 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(edgeImageScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(acceptButton)
                     .addComponent(cancelButton))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {acceptButton, cancelButton});
@@ -88,11 +99,11 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(edgeImageScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(acceptButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addComponent(edgeImageScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cancelButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -100,22 +111,14 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
     }// </editor-fold>//GEN-END:initComponents
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-        image = ImageOperations.cannyEdge(image);
-        ValueBaseOperations vbo = new ValueBaseOperations(image);
-
-        bm.setAreaRatio(vbo.areaRatio());
-        bm.setAspectRatio(vbo.aspectRatio());
-        bm.setEccentricity(vbo.eccentricity());
-        bm.setRoundness(vbo.roudness());
-        bm.setModified();
-        
         setVisible(false);
+        showMorphologicalDilationBox();
         dispose();
-    }//GEN-LAST:event_acceptButtonActionPerformed
+}//GEN-LAST:event_acceptButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
+}//GEN-LAST:event_cancelButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton acceptButton;
@@ -124,7 +127,8 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
     // End of variables declaration//GEN-END:variables
     protected PlanarImage image;
     protected PlanarImage thumbnail;
-    private BaseModel bm;
+    private SauceAndToppingModel stm;
+    private ClasificacionDePizzasMorphologicalDilationBox morphologicalDilationBox;
 
     void setImage(PlanarImage image) {
         this.image = image;
@@ -145,13 +149,13 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
         }
 
         try {
-            // previsualización en miniatura del detector de bordes
-            previewImage = ImageOperations.cannyEdge(thumbnail);
+            // previsualización en miniatura del detector de bordes Sobel
+            previewImage = ImageOperations.sobelEdge(thumbnail);
             DisplayJAI display = new DisplayJAI(previewImage);
             edgeImageScrollPane.setViewportView(display);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this,
-                    "No es posible aplicar el detector de bordes.",
+                    "No es posible aplicar el detector de bordes Sobel.",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         } catch (RuntimeException e) {
@@ -162,7 +166,7 @@ public class ClasificacionDePizzasCannyEdgeDetectorBox extends javax.swing.JDial
         }
     }
 
-    void setBaseModel(BaseModel bm) {
-        this.bm = bm;
+    void setSauceAndToppingModel(SauceAndToppingModel stm) {
+        this.stm = stm;
     }
 }

@@ -16,6 +16,7 @@ import javax.media.jai.PlanarImage;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import clasificaciondepizzas.operations.ImageOperations;
+import clasificaciondepizzas.types.images.ImageType;
 
 /**
  *
@@ -29,13 +30,14 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
         initComponents();
     }
 
-    public void showThresholdBox() {
+    public void showThresholdBox(ImageType type) {
         JFrame mainFrame = ClasificacionDePizzasApp.getApplication().getMainFrame();
         thresholdBox = new ClasificacionDePizzasThresholdBox(mainFrame);
         thresholdBox.setLocationRelativeTo(this);
         image = ImageOperations.medianFilter(image, medianSlider.getValue());
         thresholdBox.setImage(image);
         thresholdBox.setBaseModel(bm);
+        thresholdBox.setImageType(type);
 
         ClasificacionDePizzasApp.getApplication().show(thresholdBox);
     }
@@ -221,7 +223,7 @@ public class ClasificacionDePizzasMedianFilterBox extends javax.swing.JDialog {
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
         setVisible(false);
-        showThresholdBox();
+        showThresholdBox(ImageType.BASE);
         dispose();
     }//GEN-LAST:event_acceptButtonActionPerformed
 

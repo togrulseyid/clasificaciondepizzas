@@ -4,6 +4,7 @@
  */
 package clasificaciondepizzas.operations;
 
+import java.text.NumberFormat;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.TiledImage;
 
