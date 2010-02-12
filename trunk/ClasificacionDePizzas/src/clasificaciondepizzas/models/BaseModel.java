@@ -4,9 +4,6 @@
  */
 package clasificaciondepizzas.models;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 /**
  *
  * @author Manuel
@@ -17,16 +14,14 @@ public class BaseModel {
     private double aspectRatio;
     private double eccentricity;
     private double roundness;
-    public static final String PROP_AREARATIO = "areaRatio";
-    public static final String PROP_ASPECTRATIO = "aspectRatio";
-    public static final String PROP_ECCENTRICITY = "eccentricity";
-    public static final String PROP_ROUNDNESS = "roundness";
+    private boolean modified;
 
     public BaseModel() {
         areaRatio = 0;
         aspectRatio = 0;
         eccentricity = 0;
         roundness = 0;
+        modified = false;
     }
 
     public BaseModel(double roundness, double eccentricity, double areaRatio, double aspectRatio) {
@@ -34,6 +29,7 @@ public class BaseModel {
         this.aspectRatio = aspectRatio;
         this.eccentricity = eccentricity;
         this.roundness = roundness;
+        modified = false;
     }
 
     /**
@@ -51,30 +47,9 @@ public class BaseModel {
      * @param areaRatio new value of areaRatio
      */
     public void setAreaRatio(double areaRatio) {
-        double oldAreaRatio = this.areaRatio;
         this.areaRatio = areaRatio;
-        propertyChangeSupport.firePropertyChange(PROP_AREARATIO, oldAreaRatio, areaRatio);
     }
-    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-
-    /**
-     * Add PropertyChangeListener.
-     *
-     * @param listener
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    /**
-     * Remove PropertyChangeListener.
-     *
-     * @param listener
-     */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
-    }
-
+    
     /**
      * Get the value of aspectRatio
      *
@@ -90,9 +65,7 @@ public class BaseModel {
      * @param aspectRatio new value of aspectRatio
      */
     public void setAspectRatio(double aspectRatio) {
-        double oldAspectRatio = this.aspectRatio;
         this.aspectRatio = aspectRatio;
-        propertyChangeSupport.firePropertyChange(PROP_ASPECTRATIO, oldAspectRatio, aspectRatio);
     }
 
     /**
@@ -110,9 +83,7 @@ public class BaseModel {
      * @param eccentricity new value of eccentricity
      */
     public void setEccentricity(double eccentricity) {
-        double oldEccentricity = this.eccentricity;
         this.eccentricity = eccentricity;
-        propertyChangeSupport.firePropertyChange(PROP_ECCENTRICITY, oldEccentricity, eccentricity);
     }
 
     /**
@@ -130,8 +101,14 @@ public class BaseModel {
      * @param roundness new value of roundness
      */
     public void setRoundness(double roundness) {
-        double oldRoundness = this.roundness;
         this.roundness = roundness;
-        propertyChangeSupport.firePropertyChange(PROP_ROUNDNESS, oldRoundness, roundness);
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public void setModified() {
+        modified = true;
     }
 }
