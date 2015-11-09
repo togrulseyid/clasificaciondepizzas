@@ -1,0 +1,1 @@
+En este trabajo se implementará un método para clasificar la base de la pizza, así como sus ingredientes usando técnicas de visión por ordenador.
